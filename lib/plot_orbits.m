@@ -93,9 +93,14 @@ erot    = 7.2921158553e-5; % earth rotation rate (radians/sec)
 
 
 % I, J ,K, Vectors
-plot3([0,2*erad],[0 0],[0 0],'black','Linewidth',2); plot3(2*erad,0,0,'black>','Linewidth',2.5);
-plot3([0 0],[0,2*erad],[0 0],'black','Linewidth',2); plot3(0,2*erad,0,'black>','Linewidth',2.5);
-plot3([0 0],[0 0],[0,2*erad],'black','Linewidth',2); plot3(0,0,2*erad,'black^','Linewidth',2.5);
+plot3([0,2*erad],[0 0],[0 0],'k','Linewidth',2); 
+plot3(2*erad,0,0,'k>','Linewidth',2.5);
+
+plot3([0 0],[0,2*erad],[0 0],'k','Linewidth',2); 
+plot3(0,2*erad,0,'k>','Linewidth',2.5);
+
+plot3([0 0],[0 0],[0,2*erad],'k','Linewidth',2); 
+plot3(0,0,2*erad,'k^','Linewidth',2.5);
 
 xlabel('I');
 ylabel('J');
@@ -126,11 +131,12 @@ set(globe, 'FaceColor', 'texturemap', 'CData', cdata, 'FaceAlpha', alpha, 'EdgeC
 az = 120;
 el = 30;
 view(az, el);
+ax = gca();
+#ax.Clipping = 'off';
 ylim([-3e7 3e7]);
 xlim([-3e7 3e7]);
 zlim([-3e7 3e7]);
-ax = gca;
-ax.Clipping = 'off';
+
 
 end
 

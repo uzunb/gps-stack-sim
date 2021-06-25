@@ -1,11 +1,8 @@
 clc
 clear all
 close all
-
-
-[ortho, cmap] = imread('mtn50_epsg25830_0354.tif');
 R = worldfileread('mtn50_epsg25830_0354.tfw');
-
+[ortho, cmap] = imread('mtn50_epsg25830_0354.tif');
 %mapshow(ortho, cmap, R);
 extra_inf = geotiffinfo('mtn50_epsg25830_0354.tif');
 %%

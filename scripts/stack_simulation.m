@@ -12,7 +12,7 @@ close all
 clc
 % set env variables
 ROOTDIR = fileparts(get_lib_path);
-almFile = strcat(ROOTDIR,'/files/almanac/W918.alm')
+almFile = strcat(ROOTDIR,'/files/almanac/W918.alm');
 ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc0920.17n');
 
 % read rinex and set contextual parameters

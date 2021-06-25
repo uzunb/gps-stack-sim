@@ -108,7 +108,7 @@ v(v<0) = v(v<0) + 2*pi;
     %omega(semicircle):  Argument of perigee
 %Output:
     %Phik(Rad):  Argument of lattitude
-phi= v + eph.omega;
+phi = v + eph.omega;
 
 %**************************************************************************
 %************************************************************************** 
@@ -159,9 +159,9 @@ delta_i =eph.Cis.*sin(2*phi)+eph.Cic.*cos(2*phi);
     % rk(meter): corrected radius
     % ik(Rad):corrected inclination
     % Omegak(Rad):Corrected longitude of ascending node.
-u = phi + delta_u;              %Latitude
-r = A.*(1-(eph.e).*cos(E))+ delta_r;   %Radious
-i = (eph.i0)+delta_i+(eph.i_dot).*t;  %Inclination
+u = phi + delta_u;                      %Latitude
+r = A.*(1-(eph.e).*cos(E))+ delta_r;    %Radious
+i = (eph.i0)+delta_i+(eph.i_dot).*t;    %Inclination
 
 Omega= eph.OMEGA + (eph.OMEGA_dot-omegae_dot).*t-omegae_dot.*eph.toe;
 

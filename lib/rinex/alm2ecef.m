@@ -8,12 +8,11 @@ function [sat_xyz, orbit_parameters] = alm2ecef(alm ,tsv)
 % Constant Parameter of this function
 GM = 3.986005e14;             % earth's universal gravitational [m^3/s^2]
 c = 2.99792458e8;             % speed of light (m/s)
-omegae_dot = 7.2921151467e-5; % earth's rotation rate (rad/sec)
+Omega_dote = 7.2921151467e-5; % earth's rotation rate (rad/sec)
 
 A = alm.sqrtA.^2;
 
-alm.toe = 0; % for almanac 
-t = tsv - alm.toe;
+t = tsv - alm.timeOfApplicability;
 
 %************************************************************************** 
 %************************************************************************** 
@@ -22,19 +21,17 @@ t = tsv - alm.toe;
     %A(meter): Semi-major axis
     %Mu(meter^3/sec^2): value of Earth's universal gravitational parameters
     %tk(sec): Time from Ephemeris Reference Epoch
-    %Delta_n(semi-circle/sec):Mean Motion Diference From Computed Value
+    %Delta_n(semi-circle/sec): Mean Motion Diference From Computed Value
     %M0(semi-circles):
 %Output:
     %n0(Rad/sec):Computed mean motion 
     %n(semi-circle/sec):Corrected mean motion
     %Mk(semi-circle):Mean anomaly
 delta_n = 0;    
-% M0 = ? ;
-A = alm.sqrtA * alm.sqrtA;
  
-n0=(GM./(A.^3)).^(1/2);
-n=(n0) + delta_n;
-M=alm.M0 + n .* t;
+n0 = (GM ./ (A.^3)) .^ (1/2);
+n = (n0) + delta_n;
+M = alm.meanAnomaly + n .* t;
 
 % compute the eccentric anomaly from mean anomaly using
 % Newton-Raphson method to solve for 'E' in:  
@@ -47,7 +44,6 @@ M=alm.M0 + n .* t;
 %   E = E + dE;
 % end
 
-%
 % Perform Newton-Raphson solution for Eccentric anomaly estimate (rad)
 NRnext = 0;
 for i=1:10
@@ -62,11 +58,11 @@ E=NRnext; % Eccentric anomaly estimate for computing delta_tr (rad)
 % Time correction
 F = -2*sqrt(GM)/c^2; % (s/m^1/2)
 delta_tr = F.*(alm.eccentricity).*(A.^(1/2)).*sin(E);
-delta_tsv = (alm.af0)+(alm.af1).*(tsv-(alm.toe))+delta_tr;
+delta_tsv = (alm.af0)+(alm.af1).*(tsv-(alm.timeOfApplicability))+delta_tr;
 t = tsv-delta_tsv;
 
-t=t-(alm.toe);  		 % Time from alm ref epoch (s)
-M=alm.M0+n.*t;	     % Mean anomaly (rad/s)
+t=t-(alm.timeOfApplicability);  		 % Time from alm ref epoch (s)
+M = alm.meanAnomaly + n .* t;	     % Mean anomaly (rad/s)
 
 %Perform Newton-Raphson solution for Eccentric anomaly (rad)
 NRnext=0;
@@ -152,11 +148,14 @@ delta_i = 0;
     % rk(meter): corrected radius
     % ik(Rad):corrected inclination
     % Omegak(Rad):Corrected longitude of ascending node.
-u = phi + delta_u;              %Latitude
-r = A.*(1-(alm.eccentricity).*cos(E))+ delta_r;   %Radious
-i = (alm.i0)+delta_i+(alm.i_dot).*t;  %Inclination
 
-Omega= alm.OMEGA + (alm.OMEGA_dot-omegae_dot).*t-omegae_dot.*alm.toe;
+i0    = alm.orbitalInclination;                     % ???
+
+u = phi + delta_u;                                %Latitude
+r = A.*(1-(alm.eccentricity).*cos(E))+ delta_r;   %Radious
+i = i0;                      %Inclination
+
+Omega= alm.rightAscenAtWeek + (alm.rateOfRightAscen-Omega_dote).*t-Omega_dote.*alm.timeOfApplicability;
 
 %**************************************************************************
 %************************************************************************** 
@@ -170,14 +169,14 @@ x = x_pop.*cos(Omega)-y_pop.*cos(i).*sin(Omega);
 y = x_pop.*sin(Omega)+y_pop.*cos(i).*cos(Omega);
 z = y_pop.*sin(i);
 
-sat_xyz = [ alm.PRN; x; y; z ];
+sat_xyz = [ alm.id; x; y; z ];
 
-orbit_parameters.svid = alm.PRN;
+orbit_parameters.svid = alm.id;
 orbit_parameters.E = E;
 orbit_parameters.A = A;
 orbit_parameters.I = i;
 orbit_parameters.Omega = Omega;
 orbit_parameters.c = v;
-orbit_parameters.e = alm.e;
+orbit_parameters.e = alm.eccentricity;
 orbit_parameters.r = r;
 orbit_parameters.u = u;

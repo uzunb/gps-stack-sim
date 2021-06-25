@@ -3,30 +3,42 @@ clear all
 
 ROOTDIR = fileparts(get_lib_path);
 
-ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc1730.21n');
 image_file = fullfile(ROOTDIR,'/files/land_ocean_ice_2048.png');
 
-% Read rinex navigation file
-[r_eph, r_head] = read_rinex_nav(ephFile, 1:32);
-
-# Read Almanac file
-almFile = strcat(ROOTDIR,'/files/Almanac/172.ALM');
-[ALM, leapSeconds] = readAlmanac(almFile);
-
 % Get GPS time
-[~, gps_sec] = cal2gpstime([2017 04 04 16 51 30]);
+[~, gps_sec] = cal2gpstime([2021 25 06 17 00 00]);
 
-% Add leap seconds from ephemerides
-gps_sec = gps_sec+r_head.leapSeconds;
+##% |--------- Ephemeris File ---------| %
+##
+##ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc1740.21n');
+##
+##% Read rinex navigation file
+##[r_eph, r_head] = read_rinex_nav(ephFile, 1:32);
+##
+##% Add leap seconds from ephemerides
+##gps_sec = gps_sec + r_head.leapSeconds;
+##
+##% Convert ephemerides to ECEF and get orbit parameters
+##[ satp, orbit_parameters ] = eph2ecef(r_eph, gps_sec);
 
-% Convert ephemerides to ECEF and get orbit parameters
-[ satp, orbit_parameters ] = eph2ecef(r_eph, gps_sec);
+
+% |--------- Almanac File ---------| %
+almFile = strcat(ROOTDIR,'/files/Almanac/176.ALM');
+
+% Read almanac parameters from file
+[alm, leapSeconds] = readAlmanac(almFile);
+
+% Add leap seconds from almanac
+gps_sec = gps_sec + leapSeconds;
+
+% Convert almanac to ECEF and get orbit parameters
+[ satp, orbit_parameters ] = alm2ecef(alm, gps_sec);
 
 % Receiver position in LLA
 rcv_lla = [ deg2rad(41.10824148713439) deg2rad(29.03071345579637) 200];
 
 % Elevatoin angle
-E_angle = 75;
+E_angle = 15;
 
 % Get visible space vehicles from rcv_lla
 vis_sv = visible_sv(satp, rcv_lla, E_angle);

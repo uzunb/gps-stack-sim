@@ -2,21 +2,21 @@
 % Author:    Batuhan UZUN
 % Created:   23.06.2021
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-##  ******** Week 115 almanac for PRN-01 ********
-##  ID:                         01
-##  Health:                     000
-##  Eccentricity:               0.1102590561E-001
-##  Time of Applicability(s):  319488.0000
-##  Orbital Inclination(rad):   0.9847221889
-##  Rate of Right Ascen(r/s):  -0.7737465154E-008
-##  SQRT(A)  (m 1/2):           5153.642090
-##  Right Ascen at Week(rad):   0.2345197091E+001
-##  Argument of Perigee(rad):   0.863190763
-##  Mean Anom(rad):             0.1332284785E+001
-##  Af0(s):                     0.6494522095E-003
-##  Af1(s/s):                  -0.1091393642E-010
-##  week:                        115
-##
+%  ******** Week 115 almanac for PRN-01 ********
+%  ID:                         01
+%  Health:                     000
+%  Eccentricity:               0.1102590561E-001
+%  Time of Applicability(s):  319488.0000
+%  Orbital Inclination(rad):   0.9847221889
+%  Rate of Right Ascen(r/s):  -0.7737465154E-008
+%  SQRT(A)  (m 1/2):           5153.642090
+%  Right Ascen at Week(rad):   0.2345197091E+001
+%  Argument of Perigee(rad):   0.863190763
+%  Mean Anom(rad):             0.1332284785E+001
+%  Af0(s):                     0.6494522095E-003
+%  Af1(s/s):                  -0.1091393642E-010
+%  week:                        115
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Input:  - filename - enter the filename to be read.  If filename
 %                      exists, the orbit will be calculated.

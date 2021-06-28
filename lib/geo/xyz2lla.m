@@ -7,7 +7,7 @@ function [ lat, lon, alt ] = xyz2lla( x, y, z, a, e2 )
 % y = ECEF Y-coordinate (m)
 % z = ECEF Z-coordinate (m)
 % a Semi-major axis
-% e2 First eccentricity squared
+% e2 First eccentricity squaredalm.
 %
 % Notes: (2) Latitude is customary geodetic (not geocentric).
 %        (3) Inputs may be scalars, vectors, or matrices of the same

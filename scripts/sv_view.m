@@ -5,9 +5,9 @@ ROOTDIR = fileparts(get_lib_path);
 
 image_file = fullfile(ROOTDIR,'/files/land_ocean_ice_2048.png');
 
-% Get GPS time
-[~, gps_sec] = cal2gpstime([2021 25 06 17 00 00]);
-
+##% Get GPS time
+##[~, gps_sec] = cal2gpstime([2021 23 06 00 04 20]);
+##
 ##% |--------- Ephemeris File ---------| %
 ##
 ##ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc1740.21n');
@@ -21,6 +21,12 @@ image_file = fullfile(ROOTDIR,'/files/land_ocean_ice_2048.png');
 ##% Convert ephemerides to ECEF and get orbit parameters
 ##[ satp, orbit_parameters ] = eph2ecef(r_eph, gps_sec);
 
+% Get GPS time
+%[~, gps_sec3] = date2gpstime([2005 1 28 13 30 00]);
+[~, gps_sec3] = date2gpstime([2021 6 20 00 00 00]);
+
+disp(gps_sec3)
+
 
 % |--------- Almanac File ---------| %
 almFile = strcat(ROOTDIR,'/files/Almanac/176.ALM');
@@ -29,7 +35,8 @@ almFile = strcat(ROOTDIR,'/files/Almanac/176.ALM');
 [alm, leapSeconds] = readAlmanac(almFile);
 
 % Add leap seconds from almanac
-gps_sec = gps_sec + leapSeconds;
+%gpsSec = 7*24*60*60;
+gps_sec = gps_sec2 + leapSeconds;
 
 % Convert almanac to ECEF and get orbit parameters
 [ satp, orbit_parameters ] = alm2ecef(alm, gps_sec);
@@ -44,7 +51,7 @@ E_angle = 15;
 vis_sv = visible_sv(satp, rcv_lla, E_angle);
 
 % SV orbit and visibility plot
-plot_orbits(satp, orbit_parameters, image_file, vis_sv);
+%plot_orbits(satp, orbit_parameters, image_file, vis_sv);
 
 % Ellipsoid parameters
 WGS84.a = 6378137;
@@ -89,3 +96,12 @@ for i=1:size(X,1)
 end
 
 hSurface = surf(XP+rcv_xyz(1),YP+ rcv_xyz(2),ZP+ rcv_xyz(3),'FaceColor','g','FaceAlpha',.4,'EdgeAlpha',.4);
+
+close all
+
+disp('lat | lon | alt'); 
+disp(satp(2)); 
+disp(','); 
+disp(satp(3)); 
+disp(','); 
+disp(satp(4));

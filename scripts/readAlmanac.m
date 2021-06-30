@@ -63,6 +63,17 @@ function [ALM, leapSecond] = readAlmanac( filename )
 
       % for title line
       currentLine = fgetl(almanacFile);
+      prnIndex = strfind(currentLine, "-");
+      currentPrn = str2num (currentLine(prnIndex+1:prnIndex+2));
+      if (currentPrn != i)
+        ALM.id(i) = i;
+        ALM.health(i) = ALM.eccentricity(i) ...
+        = ALM.timeOfApplicability(i) = ALM.orbitalInclination(i) ...
+        = ALM.rateOfRightAscen(i) = ALM.sqrtA(i) =  ALM.rightAscenAtWeek(i) ...
+        = ALM.argumentOfPerigee(i) = ALM.meanAnomaly(i) = ALM.af0(i) ...
+        = ALM.af1(i) = ALM.week(i) = NaN;
+        i = i+1;
+      endif
 
       %%% almanac contents %%%
       currentLine = fgetl(almanacFile);

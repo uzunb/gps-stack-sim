@@ -88,32 +88,32 @@ if (month > 2)
     m = month;
 end
 
-years = year - 1980;
-leapYears = ceil(years/4);
-daysOfYear = years * 365;
-monthOfDays = day - 6;
-totalDays = daysOfYear + leapYears + monthOfDays;
-
-daySeconds = 86400;
-totalSeconds = totalDays * daySeconds;
-
-totalNumberOfWeeks = totalSeconds / secs_per_week;
-daysIntoWeek = (totalNumberOfWeeks - double(int32(floor(totalNumberOfWeeks)))) * 7;
-
-totalSecondsInDays = daysIntoWeek * daySeconds;
-secondsOfRemainHours = (hour+(min/60)+(sec/3600)) * 3600;
-
-totalSecondsInDays = totalSecondsInDays + secondsOfRemainHours;
-gps_seconds = floor(totalSecondsInDays);
-
-
-##% Computes the Julian date corresponding to the given calendar date.
-##JD = floor( (365.25 * y) ) + floor( (30.6001 * (m+1)) ) + ...
-##    day + ( (hour + min / 60 + sec / 3600) / 24 ) + 1720981.5;
+##years = year - 1980;
+##leapYears = ceil(years/4);
+##daysOfYear = years * 365;
+##monthOfDays = day - 6;
+##totalDays = daysOfYear + leapYears + monthOfDays;
 ##
-##% Computes the GPS week corresponding to the given calendar date.
-##gps_week = floor( (JD - 2444244.5) / 7 );
+##daySeconds = 86400;
+##totalSeconds = totalDays * daySeconds;
 ##
-##% Computes the GPS seconds corresponding to the given calendar date.
-##gps_seconds=round(((((JD-2444244.5)/7)-gps_week)*secs_per_week)/0.5)*0.5;
+##totalNumberOfWeeks = totalSeconds / secs_per_week;
+##daysIntoWeek = (totalNumberOfWeeks - double(int32(floor(totalNumberOfWeeks)))) * 7;
+##
+##totalSecondsInDays = daysIntoWeek * daySeconds;
+##secondsOfRemainHours = (hour+(min/60)+(sec/3600)) * 3600;
+##
+##totalSecondsInDays = totalSecondsInDays + secondsOfRemainHours;
+##gps_seconds = floor(totalSecondsInDays);
+
+
+% Computes the Julian date corresponding to the given calendar date.
+JD = floor( (365.25 * y) ) + floor( (30.6001 * (m+1)) ) + ...
+    day + ( (hour + min / 60 + sec / 3600) / 24 ) + 1720981.5;
+
+% Computes the GPS week corresponding to the given calendar date.
+gps_week = floor( (JD - 2444244.5) / 7 );
+
+% Computes the GPS seconds corresponding to the given calendar date.
+gps_seconds=round(((((JD-2444244.5)/7)-gps_week)*secs_per_week)/0.5)*0.5;
 

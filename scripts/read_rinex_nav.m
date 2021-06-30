@@ -81,6 +81,7 @@ while feof(fid) ~= 1
     % parse epoch line (ignores SV clock bias, drift, and drift rate)
     [PRN, Y, M, D, H, min, sec,af0,af1,af2] = parsef(current_line, {'I2' 'I3' 'I3' 'I3' 'I3' 'I3' ...
                                                   'F5.1','D19.12','D19.12','D19.12'});
+                                                  
     if (~any(sv_IDs == PRN) || any(EPH.PRN == PRN)) 
         continue;
     end

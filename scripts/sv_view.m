@@ -5,41 +5,46 @@ ROOTDIR = fileparts(get_lib_path);
 
 image_file = fullfile(ROOTDIR,'/files/land_ocean_ice_2048.png');
 
-##% Get GPS time
-##[~, gps_sec] = cal2gpstime([2021 23 06 00 04 20]);
-##
-##% |--------- Ephemeris File ---------| %
-##
-##ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc1740.21n');
-##
-##% Read rinex navigation file
-##[r_eph, r_head] = read_rinex_nav(ephFile, 1:32);
-##
-##% Add leap seconds from ephemerides
-##gps_sec = gps_sec + r_head.leapSeconds;
-##
-##% Convert ephemerides to ECEF and get orbit parameters
-##[ satp, orbit_parameters ] = eph2ecef(r_eph, gps_sec);
+% Get GPS time
+[~, gps_sec] = date2gpstime([2021 6 29 00 00 00]);
+
+% |--------- Ephemeris File ---------| %
+
+ephFile = strcat(ROOTDIR,'/files/ephemeris/brdc1800.21n');
+
+% Read rinex navigation file
+[r_eph, r_head] = read_rinex_nav(ephFile, 1:32);
+
+% Add leap seconds from ephemerides
+gps_sec = gps_sec + r_head.leapSeconds;
+
+% Convert ephemerides to ECEF and get orbit parameters
+[ satpEph, orbitparametersEph ] = eph2ecef(r_eph, gps_sec);
 
 % Get GPS time
-%[~, gps_sec3] = date2gpstime([2005 1 28 13 30 00]);
-[~, gps_sec3] = date2gpstime([2021 6 20 00 00 00]);
+[~, gps_sec] = date2gpstime([2021 6 29 00 00 00]);
 
-disp(gps_sec3)
+disp(gps_sec)
 
 
 % |--------- Almanac File ---------| %
-almFile = strcat(ROOTDIR,'/files/Almanac/176.ALM');
+almFile = strcat(ROOTDIR,'/files/Almanac/180.ALM');
 
 % Read almanac parameters from file
 [alm, leapSeconds] = readAlmanac(almFile);
 
 % Add leap seconds from almanac
 %gpsSec = 7*24*60*60;
-gps_sec = gps_sec2 + leapSeconds;
+gps_sec = gps_sec + leapSeconds;
 
 % Convert almanac to ECEF and get orbit parameters
-[ satp, orbit_parameters ] = alm2ecef(alm, gps_sec);
+[ satpAlm, orbitparametersAlm ] = alm2ecef(alm, gps_sec);
+
+
+satpDiff = diffSatp(satpEph, satpAlm);
+
+[satpAll, orbitparametersAll] = satelliteConcat(satpEph, satpAlm, orbitparametersEph, orbitparametersAlm);
+
 
 % Receiver position in LLA
 rcv_lla = [ deg2rad(41.10824148713439) deg2rad(29.03071345579637) 200];
@@ -48,10 +53,10 @@ rcv_lla = [ deg2rad(41.10824148713439) deg2rad(29.03071345579637) 200];
 E_angle = 15;
 
 % Get visible space vehicles from rcv_lla
-vis_sv = visible_sv(satp, rcv_lla, E_angle);
+vis_sv = visible_sv(satpAll, rcv_lla, E_angle);
 
 % SV orbit and visibility plot
-%plot_orbits(satp, orbit_parameters, image_file, vis_sv);
+plot_orbits(satpAll, orbitparametersAll, image_file, vis_sv);
 
 % Ellipsoid parameters
 WGS84.a = 6378137;
@@ -97,11 +102,10 @@ end
 
 hSurface = surf(XP+rcv_xyz(1),YP+ rcv_xyz(2),ZP+ rcv_xyz(3),'FaceColor','g','FaceAlpha',.4,'EdgeAlpha',.4);
 
-close all
 
 disp('lat | lon | alt'); 
-disp(satp(2)); 
+disp(satpAlm(2)); 
 disp(','); 
-disp(satp(3)); 
+disp(satpAlm(3)); 
 disp(','); 
-disp(satp(4));
+disp(satpAlm(4));
